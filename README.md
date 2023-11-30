@@ -12,7 +12,7 @@ API REST para la gestión de productos, consta de operaciones CRUD de un product
 ## Instalación
 
 ### Configuración y ejecución de la aplicación
-Para configurar, instalar y ejecutar la aplicación se debe seguiur estos pasos. requisito: Java 17.
+Para configurar, instalar y ejecutar la aplicación se debe seguir los siguientes pasos. Requisito: Java 17.
 
 ### Clonar el repositorio
 Clonar este repositorio en la máquina local usando el siguiente comando en la terminal:
