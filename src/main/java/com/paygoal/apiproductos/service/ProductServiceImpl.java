@@ -51,7 +51,7 @@ public class ProductServiceImpl implements IProductService {
             product.setPrice(productDTO.getPrice());
             product.setQuantity(productDTO.getQuantity());
             productDAO.save(product);
-            return productDTO;
+            return modelMapper.map(product,ProductDTO.class);
         } else throw new ProductDoesNotExist(id);
     }
     @Transactional(readOnly = true)
