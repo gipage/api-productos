@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -39,7 +41,7 @@ public class ProductServiceImpl implements IProductService {
         } else throw new ProductAlreadyExist(product.getId(), product.getName());
 
     }
-
+    @Transactional
     @Override
     public ProductDTO updateProduct(long id, ProductDTO productDTO) throws ApiException {
         if (productDAO.existsById(id)) {
@@ -52,7 +54,7 @@ public class ProductServiceImpl implements IProductService {
             return productDTO;
         } else throw new ProductDoesNotExist(id);
     }
-
+    @Transactional(readOnly = true)
     @Override
     public ProductDTO getProduct(long id) throws ApiException {
         if (productDAO.existsById(id)) {
@@ -60,6 +62,19 @@ public class ProductServiceImpl implements IProductService {
         }
         throw new ProductDoesNotExist(id);
 
+    }
+    @Transactional
+    @Override
+    public void deleteProduct(long id) throws ApiException {
+        if(productDAO.existsById(id))
+            productDAO.delete(productDAO.getReferenceById(id));
+        else throw new ProductDoesNotExist(id);
+    }
+
+    @Override
+    public List<ProductDTO> getAll() {
+        List<Product> products = productDAO.getAllOrderByPrice();
+        return products.stream().map(product -> modelMapper.map(product,ProductDTO.class)).collect(Collectors.toList());
     }
 
 
