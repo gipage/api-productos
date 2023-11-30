@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface IProductService {
     CreateSuccessfullyDTO createProduct(ProductDTO productDTO) throws ApiException;
-    ProductDTO updateProduct(long id, ProductDTO productDTO) throws ApiException;
-    ProductDTO getProduct(long id) throws ApiException;
-    void deleteProduct(long id) throws ApiException;
+    ProductDTO updateProduct(Long id, ProductDTO productDTO) throws ApiException;
+    ProductDTO getProduct(Long id) throws ApiException;
+    void deleteProduct(Long id) throws ApiException;
     List<ProductDTO> getAll();
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Product implements Serializable {
     @Id
     @Column(name = "id_product", updatable = false, nullable = false)
-    private long id;
+    private Long id;
     @Column(name = "name_product",nullable = false)
     private String name;
     @Column(name = "description_product",nullable = false)
@@ -25,5 +25,5 @@ public class Product implements Serializable {
     @Column(name = "price_product",nullable = false)
     private BigDecimal price;
     @Column(name = "quantity_product",nullable = false)
-    private int quantity;
+    private Integer quantity;
 }

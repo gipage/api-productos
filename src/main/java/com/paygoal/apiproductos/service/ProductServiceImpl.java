@@ -43,7 +43,7 @@ public class ProductServiceImpl implements IProductService {
     }
     @Transactional
     @Override
-    public ProductDTO updateProduct(long id, ProductDTO productDTO) throws ApiException {
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) throws ApiException {
         if (productDAO.existsById(id)) {
             Product product = productDAO.getReferenceById(id);
             product.setName(productDTO.getName());
@@ -56,7 +56,7 @@ public class ProductServiceImpl implements IProductService {
     }
     @Transactional(readOnly = true)
     @Override
-    public ProductDTO getProduct(long id) throws ApiException {
+    public ProductDTO getProduct(Long id) throws ApiException {
         if (productDAO.existsById(id)) {
             return modelMapper.map(productDAO.getReferenceById(id), ProductDTO.class);
         }
@@ -65,7 +65,7 @@ public class ProductServiceImpl implements IProductService {
     }
     @Transactional
     @Override
-    public void deleteProduct(long id) throws ApiException {
+    public void deleteProduct(Long id) throws ApiException {
         if(productDAO.existsById(id))
             productDAO.delete(productDAO.getReferenceById(id));
         else throw new ProductDoesNotExist(id);

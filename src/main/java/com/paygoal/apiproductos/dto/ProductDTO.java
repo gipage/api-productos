@@ -1,6 +1,9 @@
 package com.paygoal.apiproductos.dto;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +13,16 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
-    private long id;
+    @NotBlank
+    private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
+    @NotBlank
+    @Positive
     private BigDecimal price;
-    private int quantity;
+    @NotBlank
+    @Positive
+    private Integer quantity;
 }
