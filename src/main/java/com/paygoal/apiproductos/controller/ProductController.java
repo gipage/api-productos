@@ -21,4 +21,8 @@ public class ProductController {
    public ResponseEntity<?> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO) throws ApiException {
        return new ResponseEntity<>(productService.updateProduct(id,productDTO), HttpStatus.OK);
    }
+   @GetMapping("/products/{id}")
+   public ResponseEntity<?> getProduct(@PathVariable long id) throws ApiException {
+       return new ResponseEntity<>(productService.getProduct(id), HttpStatus.OK);
+   }
 }

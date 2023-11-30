@@ -53,6 +53,15 @@ public class ProductServiceImpl implements IProductService {
         } else throw new ProductDoesNotExist(id);
     }
 
+    @Override
+    public ProductDTO getProduct(long id) throws ApiException {
+        if (productDAO.existsById(id)) {
+            return modelMapper.map(productDAO.getReferenceById(id), ProductDTO.class);
+        }
+        throw new ProductDoesNotExist(id);
+
+    }
+
 
     private Timestamp getDateNow() {
         Calendar calendar = Calendar.getInstance();
