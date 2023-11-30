@@ -77,7 +77,7 @@ Probar los diferentes endpoints siguiendo las instrucciones en la misma docu.
 - Método: GET
 - Respuesta:
   
-200 - OK: En el body de la response se devuelve una lista de ProductDTO o vacía si no existen productos.
+200 - OK: En el body de la response se devuelve una lista de ProductDTO ordenados de mayor a menor (se tomó esta convención) o vacía si no existen productos.
 
 #### Update Product
 ```http
