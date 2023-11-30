@@ -4,6 +4,7 @@ import com.paygoal.apiproductos.dto.CreateSuccessfullyDTO;
 import com.paygoal.apiproductos.dto.ProductDTO;
 import com.paygoal.apiproductos.exceptions.ApiException;
 import com.paygoal.apiproductos.exceptions.ProductAlreadyExist;
+import com.paygoal.apiproductos.exceptions.ProductDoesNotExist;
 import com.paygoal.apiproductos.model.Product;
 import com.paygoal.apiproductos.repository.IProductDAO;
 import com.paygoal.apiproductos.service.interfaces.IProductService;
@@ -18,11 +19,14 @@ import java.util.Date;
 
 @Service
 public class ProductServiceImpl implements IProductService {
-    //realizar en constructor
+    private final ModelMapper modelMapper;
+    private final IProductDAO productDAO;
+
     @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private IProductDAO productDAO;
+    public ProductServiceImpl(ModelMapper modelMapper, IProductDAO productDAO) {
+        this.modelMapper = modelMapper;
+        this.productDAO = productDAO;
+    }
 
     @Transactional
     @Override
@@ -32,8 +36,21 @@ public class ProductServiceImpl implements IProductService {
         if (!(productDAO.existsById(product.getId()))) {
             productDAO.save(product);
             return new CreateSuccessfullyDTO(product.getId(), getDateNow());
-        } else throw new ProductAlreadyExist(product.getId(),product.getName());
+        } else throw new ProductAlreadyExist(product.getId(), product.getName());
 
+    }
+
+    @Override
+    public ProductDTO updateProduct(long id, ProductDTO productDTO) throws ApiException {
+        if (productDAO.existsById(id)) {
+            Product product = productDAO.getReferenceById(id);
+            product.setName(productDTO.getName());
+            product.setDescription(productDTO.getDescription());
+            product.setPrice(productDTO.getPrice());
+            product.setQuantity(productDTO.getQuantity());
+            productDAO.save(product);
+            return productDTO;
+        } else throw new ProductDoesNotExist(id);
     }
 
 
@@ -42,7 +59,6 @@ public class ProductServiceImpl implements IProductService {
         // Convertir Calendar en un objeto Date
         Date fechaHoraActual = calendar.getTime();
         // Crear objeto Timestamp a partir de la fecha y hora actual
-        Timestamp timestamp = new Timestamp(fechaHoraActual.getTime());
-        return timestamp;
+        return new Timestamp(fechaHoraActual.getTime());
     }
 }

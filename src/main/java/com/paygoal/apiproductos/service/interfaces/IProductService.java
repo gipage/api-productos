@@ -6,4 +6,5 @@ import com.paygoal.apiproductos.exceptions.ApiException;
 
 public interface IProductService {
     CreateSuccessfullyDTO createProduct(ProductDTO productDTO) throws ApiException;
+    ProductDTO updateProduct(long id, ProductDTO productDTO) throws ApiException;
 }
