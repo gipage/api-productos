@@ -43,8 +43,9 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     @Override
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) throws ApiException {
-        productDAO.findById(id).orElseThrow(()-> new ProductDoesNotExist(id));
-        Product product = productDAO.getReferenceById(id);
+        //optional
+
+        Product product = productDAO.findById(id).orElseThrow(()-> new ProductDoesNotExist(id));
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
