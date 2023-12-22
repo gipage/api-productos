@@ -32,28 +32,27 @@ public class ProductServiceImpl implements IProductService {
 
     @Transactional
     @Override
-    public CreateSuccessfullyDTO createProduct(ProductDTO productDTO) throws ApiException {
+    public CreateSuccessfullyDTO createProduct(ProductDTO productDTO) {
         //mapeo DTO->Product
         Product product = modelMapper.map(productDTO, Product.class);
-        if (!(productDAO.existsById(product.getId()))) {
-            productDAO.save(product);
-            return new CreateSuccessfullyDTO(product.getId(), getDateNow());
-        } else throw new ProductAlreadyExist(product.getId(), product.getName());
+        productDAO.save(product);
+        return new CreateSuccessfullyDTO(product.getId(), getDateNow());
 
     }
+
     @Transactional
     @Override
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) throws ApiException {
-        if (productDAO.existsById(id)) {
-            Product product = productDAO.getReferenceById(id);
-            product.setName(productDTO.getName());
-            product.setDescription(productDTO.getDescription());
-            product.setPrice(productDTO.getPrice());
-            product.setQuantity(productDTO.getQuantity());
-            productDAO.save(product);
-            return modelMapper.map(product,ProductDTO.class);
-        } else throw new ProductDoesNotExist(id);
+        productDAO.findById(id).orElseThrow(()-> new ProductDoesNotExist(id));
+        Product product = productDAO.getReferenceById(id);
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setQuantity(productDTO.getQuantity());
+        productDAO.save(product);
+        return modelMapper.map(product, ProductDTO.class);
     }
+
     @Transactional(readOnly = true)
     @Override
     public ProductDTO getProduct(Long id) throws ApiException {
@@ -63,10 +62,11 @@ public class ProductServiceImpl implements IProductService {
         throw new ProductDoesNotExist(id);
 
     }
+
     @Transactional
     @Override
     public void deleteProduct(Long id) throws ApiException {
-        if(productDAO.existsById(id))
+        if (productDAO.existsById(id))
             productDAO.delete(productDAO.getReferenceById(id));
         else throw new ProductDoesNotExist(id);
     }
@@ -74,7 +74,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ProductDTO> getAll() {
         List<Product> products = productDAO.getAllOrderByPrice();
-        return products.stream().map(product -> modelMapper.map(product,ProductDTO.class)).collect(Collectors.toList());
+        return products.stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
     }
 
 

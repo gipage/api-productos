@@ -8,7 +8,7 @@ import com.paygoal.apiproductos.exceptions.ProductDoesNotExist;
 import java.util.List;
 
 public interface IProductService {
-    CreateSuccessfullyDTO createProduct(ProductDTO productDTO) throws ApiException;
+    CreateSuccessfullyDTO createProduct(ProductDTO productDTO);
     ProductDTO updateProduct(Long id, ProductDTO productDTO) throws ApiException;
     ProductDTO getProduct(Long id) throws ApiException;
     void deleteProduct(Long id) throws ApiException;

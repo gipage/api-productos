@@ -16,6 +16,7 @@ import java.util.UUID;
 @Table(name = "product")
 public class Product implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_product", updatable = false, nullable = false)
     private Long id;
     @Column(name = "name_product",nullable = false)
