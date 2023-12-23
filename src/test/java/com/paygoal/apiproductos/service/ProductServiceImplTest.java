@@ -40,7 +40,7 @@ class ProductServiceImplTest {
     @BeforeEach
     void setUp() {
         productDTO = new ProductDTO("product1", "description-product1", BigDecimal.valueOf(10000), 5);
-        existingProduct= new Product(1L,"product2","description-product2",BigDecimal.valueOf(20000), 1);
+        existingProduct= new Product(1L,"product1","description-product1",BigDecimal.valueOf(10000), 5);
     }
 
     @AfterEach
@@ -50,16 +50,15 @@ class ProductServiceImplTest {
     @Test
     void testCreateProduct() {
         // arrange/given
-        Product product = mock(Product.class);
-        when(modelMapper.map(any(ProductDTO.class), eq(Product.class))).thenReturn(product);
-        when(repository.save(any(Product.class))).thenReturn(product);
+        when(modelMapper.map(any(ProductDTO.class), eq(Product.class))).thenReturn(existingProduct);
+        when(repository.save(any(Product.class))).thenReturn(existingProduct);
         //when/act
         CreateSuccessfullyDTO result = service.createProduct(productDTO);
         //then/assert
         verify(modelMapper, times(1)).map(productDTO, Product.class);
-        verify(repository, times(1)).save(any(Product.class));
+        verify(repository, times(1)).save(existingProduct);
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(product.getId());
+        assertThat(result.getId()).isEqualTo(existingProduct.getId());
     }
     @Test
     void testUpdateProductSuccessful() throws ApiException {
@@ -68,6 +67,7 @@ class ProductServiceImplTest {
         ProductDTO resultDTO = service.updateProduct(id, productDTO);
         verify(repository, times(1)).findById(id);
         verify(repository, times(1)).save(existingProduct);
+
     }
     @Test
     void testUpdateProductThrowsException() {
@@ -77,5 +77,14 @@ class ProductServiceImplTest {
                 .isThrownBy(() -> service.updateProduct(id, productDTO));
         verify(repository, times(1)).findById(id);
         verify(repository, never()).save(any()); //verifico que nunca se llame
+    }
+    @Test
+    void testGetProductSuccessful() throws ApiException{
+        Long id = 1L;
+        when(repository.findById(id)).thenReturn(Optional.of(existingProduct));
+        when(modelMapper.map(eq(existingProduct), eq(ProductDTO.class))).thenReturn(productDTO);
+        ProductDTO result = service.getProduct(id);
+        assertThat(result).isNotNull();
+        verify(repository, times(1)).findById(id);
     }
 }

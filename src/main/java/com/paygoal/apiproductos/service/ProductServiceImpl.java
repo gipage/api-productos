@@ -57,11 +57,8 @@ public class ProductServiceImpl implements IProductService {
     @Transactional(readOnly = true)
     @Override
     public ProductDTO getProduct(Long id) throws ApiException {
-        if (productDAO.existsById(id)) {
-            return modelMapper.map(productDAO.getReferenceById(id), ProductDTO.class);
-        }
-        throw new ProductDoesNotExist(id);
-
+       Product product = productDAO.findById(id).orElseThrow(()-> new ProductDoesNotExist(id));
+       return modelMapper.map(product, ProductDTO.class);
     }
 
     @Transactional
