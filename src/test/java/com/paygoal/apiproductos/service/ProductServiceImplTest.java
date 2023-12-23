@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -36,11 +37,13 @@ class ProductServiceImplTest {
 
     private ProductDTO productDTO;
     private Product existingProduct;
+    private Long id;
 
     @BeforeEach
     void setUp() {
+        id = 1L;
         productDTO = new ProductDTO("product1", "description-product1", BigDecimal.valueOf(10000), 5);
-        existingProduct= new Product(1L,"product1","description-product1",BigDecimal.valueOf(10000), 5);
+        existingProduct = new Product(1L, "product1", "description-product1", BigDecimal.valueOf(10000), 5);
     }
 
     @AfterEach
@@ -60,31 +63,38 @@ class ProductServiceImplTest {
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(existingProduct.getId());
     }
+
     @Test
     void testUpdateProductSuccessful() throws ApiException {
-        Long id = 1L;
         when(repository.findById(id)).thenReturn(Optional.of(existingProduct));
         ProductDTO resultDTO = service.updateProduct(id, productDTO);
         verify(repository, times(1)).findById(id);
         verify(repository, times(1)).save(existingProduct);
 
     }
+
     @Test
     void testUpdateProductThrowsException() {
-        Long id = 1L;
         when(repository.findById(id)).thenReturn(Optional.empty());
         assertThatExceptionOfType(ProductDoesNotExist.class)
                 .isThrownBy(() -> service.updateProduct(id, productDTO));
         verify(repository, times(1)).findById(id);
         verify(repository, never()).save(any()); //verifico que nunca se llame
     }
+
     @Test
-    void testGetProductSuccessful() throws ApiException{
-        Long id = 1L;
+    void testGetProductSuccessful() throws ApiException {
         when(repository.findById(id)).thenReturn(Optional.of(existingProduct));
         when(modelMapper.map(eq(existingProduct), eq(ProductDTO.class))).thenReturn(productDTO);
         ProductDTO result = service.getProduct(id);
         assertThat(result).isNotNull();
+        verify(repository, times(1)).findById(id);
+    }
+
+    @Test
+    void testGetProductThrowsException() {
+        when(repository.findById(id)).thenReturn(Optional.empty());
+        assertThatExceptionOfType(ProductDoesNotExist.class).isThrownBy(() -> service.updateProduct(id, productDTO));
         verify(repository, times(1)).findById(id);
     }
 }
