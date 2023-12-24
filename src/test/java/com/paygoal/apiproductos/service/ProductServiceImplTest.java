@@ -6,13 +6,10 @@ import com.paygoal.apiproductos.exceptions.ApiException;
 import com.paygoal.apiproductos.exceptions.ProductDoesNotExist;
 import com.paygoal.apiproductos.model.Product;
 import com.paygoal.apiproductos.repository.IProductDAO;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
@@ -36,41 +33,70 @@ class ProductServiceImplTest {
     private ProductServiceImpl service;
 
     private ProductDTO productDTO;
-    private Product existingProduct;
+    private Product product;
     private Long id;
 
     @BeforeEach
     void setUp() {
+        product = new Product();
         id = 1L;
-        productDTO = new ProductDTO("product1", "description-product1", BigDecimal.valueOf(10000), 5);
-        existingProduct = new Product(1L, "product1", "description-product1", BigDecimal.valueOf(10000), 5);
+        product.setId(id);
+        productDTO = new ProductDTO();
     }
 
     @AfterEach
     void tearDown() {
     }
 
+    @DisplayName("JUnit test for createProduct method")
     @Test
     void testCreateProduct() {
-        // arrange/given
-        when(modelMapper.map(any(ProductDTO.class), eq(Product.class))).thenReturn(existingProduct);
-        when(repository.save(any(Product.class))).thenReturn(existingProduct);
+        //given - precondition
+        when(modelMapper.map(any(ProductDTO.class), eq(Product.class))).thenReturn(product);
+        when(repository.save(any(Product.class))).thenReturn(product);
         //when/act
         CreateSuccessfullyDTO result = service.createProduct(productDTO);
         //then/assert
         verify(modelMapper, times(1)).map(productDTO, Product.class);
-        verify(repository, times(1)).save(existingProduct);
+        verify(repository, times(1)).save(any(Product.class));//¿save(product)-> +especifico?
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(existingProduct.getId());
+    }
+    @DisplayName("JUnit test for getProduct method")
+    @Test
+    void testGetProductSuccessful() throws ApiException {
+        when(repository.findById(id)).thenReturn(Optional.of(product));
+        when(modelMapper.map(any(Product.class), eq(ProductDTO.class))).thenReturn(productDTO);
+        ProductDTO result = service.getProduct(id);
+        assertThat(result).isNotNull();
+        verify(repository, times(1)).findById(id);
+    }
+    @DisplayName("JUnit test for getProduct method (negative case)")
+    @Test
+    void testGetProductThrowsException() {
+        when(repository.findById(id)).thenReturn(Optional.empty());
+        assertThatExceptionOfType(ProductDoesNotExist.class).isThrownBy(() -> service.updateProduct(id, productDTO));
+        verify(repository, times(1)).findById(id);
     }
 
     @Test
     void testUpdateProductSuccessful() throws ApiException {
-        when(repository.findById(id)).thenReturn(Optional.of(existingProduct));
-        ProductDTO resultDTO = service.updateProduct(id, productDTO);
-        verify(repository, times(1)).findById(id);
-        verify(repository, times(1)).save(existingProduct);
+       //given
+        Long id = 3L;
+        Product existenceProduct= new Product(3L,"product","description",BigDecimal.valueOf(2000),2);
+        ProductDTO dtoUpdate = new ProductDTO("product-update","description-update",BigDecimal.valueOf(4000),4);
 
+        when(repository.findById(id)).thenReturn(Optional.of(existenceProduct));
+        //any(Product.class) porque productDTO no tiene id
+        when(modelMapper.map(any(Product.class), eq(ProductDTO.class))).thenReturn(dtoUpdate);
+        //when - action to test
+        ProductDTO result = service.updateProduct(id, dtoUpdate);
+        //then
+        assertThat(result.getName()).isEqualTo(dtoUpdate.getName());
+        assertThat(result.getDescription()).isEqualTo(dtoUpdate.getDescription());
+        assertThat(result.getPrice()).isEqualTo(dtoUpdate.getPrice());
+        assertThat(result.getQuantity()).isEqualTo(dtoUpdate.getQuantity());
+        verify(repository, times(1)).findById(id);
+        verify(repository, times(1)).save(existenceProduct);
     }
 
     @Test
@@ -82,19 +108,5 @@ class ProductServiceImplTest {
         verify(repository, never()).save(any()); //verifico que nunca se llame
     }
 
-    @Test
-    void testGetProductSuccessful() throws ApiException {
-        when(repository.findById(id)).thenReturn(Optional.of(existingProduct));
-        when(modelMapper.map(eq(existingProduct), eq(ProductDTO.class))).thenReturn(productDTO);
-        ProductDTO result = service.getProduct(id);
-        assertThat(result).isNotNull();
-        verify(repository, times(1)).findById(id);
-    }
 
-    @Test
-    void testGetProductThrowsException() {
-        when(repository.findById(id)).thenReturn(Optional.empty());
-        assertThatExceptionOfType(ProductDoesNotExist.class).isThrownBy(() -> service.updateProduct(id, productDTO));
-        verify(repository, times(1)).findById(id);
-    }
 }

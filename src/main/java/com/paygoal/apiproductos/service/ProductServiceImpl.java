@@ -37,14 +37,12 @@ public class ProductServiceImpl implements IProductService {
         Product product = modelMapper.map(productDTO, Product.class);
         productDAO.save(product);
         return new CreateSuccessfullyDTO(product.getId(), getDateNow());
-
     }
 
     @Transactional
     @Override
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) throws ApiException {
         //optional
-
         Product product = productDAO.findById(id).orElseThrow(()-> new ProductDoesNotExist(id));
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
