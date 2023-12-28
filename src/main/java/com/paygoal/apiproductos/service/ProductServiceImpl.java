@@ -62,9 +62,8 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     @Override
     public void deleteProduct(Long id) throws ApiException {
-        if (productDAO.existsById(id))
-            productDAO.delete(productDAO.getReferenceById(id));
-        else throw new ProductDoesNotExist(id);
+        productDAO.findById(id).orElseThrow(()-> new ProductDoesNotExist(id));
+        productDAO.deleteById(id);
     }
 
     @Override

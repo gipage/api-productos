@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.AssertionsForClassTypes.within;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -77,7 +76,7 @@ class ProductServiceImplTest {
         assertThatExceptionOfType(ProductDoesNotExist.class).isThrownBy(() -> service.updateProduct(id, productDTO));
         verify(repository, times(1)).findById(id);
     }
-
+    @DisplayName("JUnit test for updateProduct")
     @Test
     void testUpdateProductSuccessful() throws ApiException {
        //given
@@ -97,8 +96,11 @@ class ProductServiceImplTest {
         assertThat(result.getQuantity()).isEqualTo(dtoUpdate.getQuantity());
         verify(repository, times(1)).findById(id);
         verify(repository, times(1)).save(existenceProduct);
+
+
     }
 
+    @DisplayName("JUnit test for updateProduct (negative case)")
     @Test
     void testUpdateProductThrowsException() {
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -107,6 +109,28 @@ class ProductServiceImplTest {
         verify(repository, times(1)).findById(id);
         verify(repository, never()).save(any()); //verifico que nunca se llame
     }
+    @DisplayName("JUnit test for deleteProduct method")
+    @Test
+    void testDeleteProduct(){
+        //given
+        doNothing().when(repository).deleteById(id);
+        //when
+        repository.deleteById(id);
+        //then
+        verify(repository,times(1)).deleteById(id);
+    }
 
+    @DisplayName("JUnit test for deleteProduct method (negative case)")
+    @Test
+    void testDeleteProductThrowsException(){
+        //given
+        when(repository.findById(id)).thenReturn(Optional.empty());
+        assertThatExceptionOfType(ProductDoesNotExist.class).isThrownBy(() -> service.deleteProduct(id));
+        doNothing().when(repository).deleteById(id);
+        //when
+        repository.deleteById(id);
+        //then
+        verify(repository,times(1)).deleteById(id);
+    }
 
 }
