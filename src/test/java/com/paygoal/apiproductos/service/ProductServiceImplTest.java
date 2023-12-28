@@ -14,6 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -73,7 +76,7 @@ class ProductServiceImplTest {
     @Test
     void testGetProductThrowsException() {
         when(repository.findById(id)).thenReturn(Optional.empty());
-        assertThatExceptionOfType(ProductDoesNotExist.class).isThrownBy(() -> service.updateProduct(id, productDTO));
+        assertThatExceptionOfType(ProductDoesNotExist.class).isThrownBy(() -> service.getProduct(id));
         verify(repository, times(1)).findById(id);
     }
     @DisplayName("JUnit test for updateProduct")
@@ -131,6 +134,34 @@ class ProductServiceImplTest {
         repository.deleteById(id);
         //then
         verify(repository,times(1)).deleteById(id);
+    }
+
+    @DisplayName("JUnit test for getAll method")
+    @Test
+    void testGetAll(){
+        //given
+        Product product1 = new Product();
+        Product product2 = new Product();
+        //utiliza internamente arraylist de puente
+        List<Product> products = Arrays.asList(product1, product2);
+        when(repository.getAllOrderByPrice()).thenReturn(products);
+        //when
+        List<ProductDTO> result = service.getAll();
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result).hasSize(2);
+    }
+    @DisplayName("JUnit test for getAll method (negative case)")
+    @Test
+    void testGetAllThrowsException(){
+        //given
+        when(repository.getAllOrderByPrice()).thenReturn(Collections.emptyList());
+        //when
+        List<ProductDTO> result = service.getAll();
+        //then
+        assertThat(result).isNotNull().isEmpty();
+        assertThat(result).hasSize(0);
+
     }
 
 }
