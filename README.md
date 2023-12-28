@@ -33,7 +33,6 @@ Probar los diferentes endpoints siguiendo las instrucciones en la misma docu.
 ```
 | Parámetro | Tipo     | Descripción              | Ejemplo|
 | :-------- | :------- | :------------------------- | :------------------------- |
-| id| `long` | **Requerido** por body.  |1
 | name| `String` | **Requerido** por body.  |Heladera
 | description| `String` | **Requerido** por body.  | Alto: 142.7. Ancho: 61.4. Color: BLANCO.
 | price| `BigDecimal` | **Requerido** por body.  | 300000.00
