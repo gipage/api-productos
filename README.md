@@ -8,6 +8,7 @@ API REST para la gestión de productos, consta de operaciones CRUD de un product
 	- [Get All](#get-all)
 	- [Update Product](#update-product)
   - [Delete User](#delete-product)
+- [Documentación con Swagger](#Documentación-con-Swagger) 
   
 ## Instalación
 
@@ -113,5 +114,8 @@ Probar los diferentes endpoints siguiendo las instrucciones en la misma docu.
 204 NO CONTENT: La solicitud se ha procesado correctamente, pero no hay información para enviar en el cuerpo de la respuesta.
   
 404 - NOT FOUND: El producto a eliminar no existe. Se lanza una excepción personalizada (ProductDoesNotExist)
+
+## Documentación con Swagger
+Una vez ejecutada la aplicación acceder desde el navegador a [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html)
 
   
