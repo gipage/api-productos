@@ -1,30 +1,31 @@
-# API REST CHALLENGE PAYGOAL
-API REST para la gestión de productos, consta de operaciones CRUD de un producto así como también obterner todos los productos ordenados por precio.
-## Índice
-- [Instalacion](#Instalación)
+# RESTful API of products for Paygoal Challenge
+REST API for product management, consists of CRUD operations of a product as well as getting all products sorted by price.
+## Table of Contents
+- [Installation](#installation)
 - [Endpoints API](#endpoints-api)
 	- [Create Product](#create-product)
 	- [Get Product](#get-product)
 	- [Get All](#get-all)
 	- [Update Product](#update-product)
   - [Delete User](#delete-product)
-- [Documentación con Swagger](#Documentación-con-Swagger) 
+- [Swagger documentation](#swagger-documentation) 
   
-## Instalación
+## Installation
 
-### Configuración y ejecución de la aplicación
-Para configurar, instalar y ejecutar la aplicación se debe seguir los siguientes pasos. Requisito: Java 17.
+### Configuration and execution of the application
+To configure, install and run the application the following steps must be followed. Requirement: Java 17.
 
-### Clonar el repositorio
-Clonar este repositorio en la máquina local usando el siguiente comando en la terminal:
+### Clone the repository
+Clone this repository on the local machine using the following command in the terminal:
+```bash
 git clone https://github.com/gipage/api-productos
+```
+### Opening the project in a Development Environment (IDE)
+Open the development environment (IntelliJ IDEA, NetBeans, Eclipse, Spring Tool Suite) and select "Open Project" or its equivalent. Navigate to the folder of the project that was just cloned and open it.
 
-### Abrir el proyecto en un Entorno de Desarrollo (IDE)
-Abrir el  entorno de desarrollo (IntelliJ IDEA, NetBeans, Eclipse, Spring Tool Suite) y seleccionar "Open Project" (Abrir Proyecto) o su equivalente. Navegar hasta la carpeta del proyecto que se acabó de clonar y abrirlo.
-
-### Ejecutar la Aplicación
-Buscar la clase principal "ApiProductosApplication" (etiquetada como @SpringBootApplication) y clickear el botón run (ejecutar) del entorno de desarrollo.
-Probar los diferentes endpoints siguiendo las instrucciones en la misma docu.
+### Running the Application
+Find the main class "ApiProductsApplication" (labeled as @SpringBootApplication) and click the run button of the development environment.
+Test the different endpoints following the instructions in the same docu.
 
 ## Endpoints API
 
@@ -32,90 +33,89 @@ Probar los diferentes endpoints siguiendo las instrucciones en la misma docu.
 ```http
   POST localhost:8080/api/v1/products
 ```
-| Parámetro | Tipo     | Descripción              | Ejemplo|
+| Parameter | Type     | Descripction             | Example|
 | :-------- | :------- | :------------------------- | :------------------------- |
-| name| `String` | **Requerido** por body.  |Heladera
-| description| `String` | **Requerido** por body.  | Alto: 142.7. Ancho: 61.4. Color: BLANCO.
-| price| `BigDecimal` | **Requerido** por body.  | 300000.00
-| quantity| `int` | **Requerido** por body.  | 30
+| name| `String` | **Required** by body.  |Heladera
+| description| `String` | **Required** by body.  | Alto: 142.7. Ancho: 61.4. Color: BLANCO.
+| price| `BigDecimal` | **Required** by body.  | 300000.00
+| quantity| `int` | **Required** by body.  | 30
 
 - URL: localhost:8080/api/v1/products
-- Método: POST
-- Respuesta:
+- Method: POST
+- Response:
   
-201 - CREATED: En el body de la response se devuelve CreateSuccessfullyDTO que consta del id del producto y su fecha de creación.
+201 - CREATED: In the body of the response we return CreateSuccessfullyDTO which consists of the product id and its creation date.
   
-409 - CONFLICT: El producto a crear ya existe. Se lanza una excepción personalizada (ProductAlreadyExist).
+409 - CONFLICT: The product to be created already exists. A custom exception (ProductAlreadyExist) is thrown.
   
 #### Get Product
 ```http
   GET localhost:8080/api/v1/products/{id}
 ```
-| Parámetro | Tipo     | Descripción              | Ejemplo|
+| Parameter | Type     | Description              | Example|
 | :-------- | :------- | :------------------------- | :------------------------- |
-| id| `long` | **Requerido** por url.  |1
+| id| `long` | **Required** by url.  |1
 
 
 - URL: localhost:8080/api/v1/products/{id}
-- Método: GET
-- Respuesta:
+- Method: GET
+- Response:
   
-200 - OK: En el body de la response se devuelve ProductDTO que consta de todos los campos del producto.
+200 - OK: The body of the response returns ProductDTO which consists of all the fields of the product.
   
-404 - NOT FOUND: El producto a buscar no existe. Se lanza una excepción personalizada (ProductDoesNotExist)
+404 - NOT FOUND: The product to search for does not exist. A custom exception (ProductDoesNotExist) is thrown.
 
 #### Get All
 ```http
   GET localhost:8080/api/v1/products
 ```
-| Parámetro | Tipo     | Descripción              | Ejemplo|
+| Parameter | Type     | Description              | Example|
 | :-------- | :------- | :------------------------- | :------------------------- |
 | |  |   |
 
 
 - URL: localhost:8080/api/v1/products
-- Método: GET
-- Respuesta:
+- Method: GET
+- Response:
   
-200 - OK: En el body de la response se devuelve una lista de ProductDTO ordenados de mayor a menor (se tomó esta convención) o vacía si no existen productos.
-
+200 - OK: In the body of the response a list of ProductDTO is returned sorted from highest to lowest (this convention was used) or empty if there are no products.
 #### Update Product
 ```http
   PUT localhost:8080/api/v1/products/{id}
 ```
-| Parámetro | Tipo     | Descripción              | Ejemplo|
+| Parameter | Type     | Description              | Example|
 | :-------- | :------- | :------------------------- | :------------------------- |
-| id| `long` | **Requerido** por url.  |1
-| name| `String` | **Requerido** por body.  |Heladera
-| description| `String` | **Requerido** por body.  | Alto: 142.7. Ancho: 61.4. Color: BLANCO.
-| price| `BigDecimal` | **Requerido** por body.  | 300000.00
-| quantity| `int` | **Requerido** por body.  | 30
+| id| `long` | **Required** by url.  |1
+| name| `String` | **Required** by body.  |Heladera
+| description| `String` | **Required** by body.  | Alto: 142.7. Ancho: 61.4. Color: BLANCO.
+| price| `BigDecimal` | **Required** by body.  | 300000.00
+| quantity| `int` | **Required** by body.  | 30
 
 - URL: localhost:8080/api/v1/products/{id}
-- Método: PUT
-- Respuesta:
+- Method: PUT
+- Response:
   
-200 - OK: En el body de la response se devuelve ProductDTO que consta de todos los campos del producto actulizado.
+200 - OK: In the body of the response, ProductDTO is returned, which consists of all the fields of the updated product.
   
-404 - NOT FOUND: El producto a actualizar no existe. Se lanza una excepción personalizada (ProductDoesNotExist)
+404 - NOT FOUND: The product to be updated does not exist. A custom exception (ProductDoesNotExist) is thrown.
 
 #### Delete Product
 ```http
   DELETE localhost:8080/api/v1/products/{id}
 ```
-| Parámetro | Tipo     | Descripción              | Ejemplo|
+| Parameter | Type     | Description              | Example|
 | :-------- | :------- | :------------------------- | :------------------------- |
-| id| `long` | **Requerido** por url.  |1
+| id| `long` | **Required** by url.  |1
 
 - URL: localhost:8080/api/v1/products/{id}
-- Método: DELETE
-- Respuesta:
+- Method: DELETE
+- Response:
   
-204 NO CONTENT: La solicitud se ha procesado correctamente, pero no hay información para enviar en el cuerpo de la respuesta.
+204 NO CONTENT: The request has been processed successfully, but there is no information to send in the body of the response.
   
-404 - NOT FOUND: El producto a eliminar no existe. Se lanza una excepción personalizada (ProductDoesNotExist)
+404 - NOT FOUND: The product to be deleted does not exist. A custom exception (ProductDoesNotExist) is thrown.
 
-## Documentación con Swagger
-Una vez ejecutada la aplicación acceder desde el navegador a [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html)
+## Swagger Documentation
+Once the application has been executed, access from the browser to [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html)
 
   
